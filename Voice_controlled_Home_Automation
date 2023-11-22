@@ -1,1 +1,46 @@
-i
+int realay1=3,relay2=4,relay3=5;
+char voice;
+void setup()
+{
+Serial.begin(9600);
+pinMode(relay1,OUTPUT);
+pinMode(relay2,OUTPUT);
+pinMode(relay3,OUTPUT);
+}
+void loop()
+{
+while(Serial.available()>0)
+{
+voice = Serial.read();
+Serial.println(voice);
+}
+if(voice=='l')
+{
+Serial.println("led is on");
+digitalWrite(relay1,LOW);
+digitalWrite(relay1,HIGH);
+digitalWrite(relay1,HIGH);
+}
+else if(voice=='b')
+{
+Serial.println("Pump is on");
+digitalWrite(relay1,HIGH);
+digitalWrite(relay1,LOW);
+digitalWrite(relay1,HIGH);
+}
+else if(voice=='f')
+{
+Serial.println("Fan is on");
+digitalWrite(relay1,HIGH);
+digitalWrite(relay1,HIGH);
+digitalWrite(relay1,LOW);
+}
+else if(voice=='m')
+{
+Serial.println("All are off");
+digitalWrite(relay1,HIGH);
+digitalWrite(relay1,HIGH);
+digitalWrite(relay1,HIGH);
+}
+}
+
