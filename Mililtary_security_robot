@@ -1,0 +1,144 @@
+#include <SerialESP826wifi.h>
+#include <Blynk.h>
+#define BLYNK_PRINT Serial
+#include <ESP8266_Lib.h>
+#include <BlynkSimpleShieldEsp8266.h>
+
+char auth[] = "QO7A_TH68yy0P4OCFD_itTs3wT3Fv_UJ";
+char ssid[] = "Galaxy A316807";
+char pass[] :”Password”;
+ESP8266 wifi(&Serial);
+#define in1 2
+#define in2 3
+#define in3 4
+#define in4 5
+#define firesensor 7
+ int   fireval;
+#define smokesensor 6
+int smokeval;
+void setup()
+{
+  Serial.begin(115200);
+  Blynk.begin(auth, wifi, ssid, pass);
+  pinMode(in1,OUTPUT);
+  pinMode(in2,OUTPUT);
+  pinMode(in3,OUTPUT);
+  pinMode(in4,OUTPUT);
+  pinMode(firesensor,INPUT);
+  pinMode(smokesensor,INPUT);
+}
+
+void loop() 
+{
+  Blynk.run();
+  fire();
+smoke();
+}
+
+BLYNK_WRITE(V0)
+{
+  int buttonstate=param.asInt();
+  if (buttonstate==1 || fireval==1 || smokeval==0)
+  MotorFwd();
+  else
+  MotorStop();
+}
+
+BLYNK_WRITE(V1)
+{
+  int buttonstate=param.asInt();
+  if (buttonstate==1 || fireval==1 || smokeval==0  )
+  MotorBack();
+  else
+  MotorStop(); 
+}
+
+BLYNK_WRITE(V2)
+{
+
+  int buttonstate=param.asInt();
+  if (buttonstate==1 || fireval==1 || smokeval==0  )
+  MotorTurnRight();
+  else
+  MotorStop();
+}
+
+BLYNK_WRITE(V3)
+{
+  int buttonstate=param.asInt();
+  if (buttonstate==1 || fireval==1 || smokeval==0 )
+  MotorTurnLeft();
+  else
+  MotorStop();
+}
+
+void MotorFwd()
+{
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+Serial.print(“forward”);
+
+}
+
+void MotorBack()
+{
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+Serial.print(“backward”);
+}
+
+void MotorTurnRight()
+{
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH); 
+Serial.print(“right”);
+
+}
+
+void MotorTurnLeft()
+{
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);  
+Serial.print(“left”);
+ 
+}
+
+void  MotorStop()
+{
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW);  
+}
+Void fire()
+{
+Fireval=digitalRead(firesensor);
+Serial.print(“val=”);
+Serial.println(fireval);
+delay(1000);
+If(fireval==1)
+{
+Serial.println(“fire is found”);
+MotorStop();
+}
+}
+Void smoke()
+{
+Smokeval=digitalRead(smokesensor);
+Serial.print(“val=”);
+Serial.println(“Smokeval”);
+delay(1000);
+If(smokeval==0)
+{
+Serial.println(“Smoke is detected”);
+MotorStop();
+}
+}
